@@ -1,2 +1,2 @@
 # nodemcu_lua
-lua scripts for nodemcu (on esp8266)
+small collection of lua scripts for nodemcu (on esp8266)
