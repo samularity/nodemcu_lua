@@ -16,17 +16,15 @@ disp:setDefaultForegroundColor()
 disp:setFontPosTop()
 
 
-function interal_draw(string,line)
-    disp:drawStr(0,line,string)
+function draw()
+    local ip,_,_=wifi.sta.getip()
+    disp:drawStr(0,0,"ESP IP: "..ip)
 end
+disp:firstPage()
+repeat
+    draw()
 
-function draw(string,line)
-   disp:firstPage()
-   repeat
-     interal_draw(string,line)
-  until disp:nextPage() == false
-end
-
+until disp:nextPage() == false
 
 
 function write_reg(dev_addr,tx_bit)
