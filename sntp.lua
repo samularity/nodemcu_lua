@@ -1,9 +1,10 @@
 --settings 
 local default_ntpserver="pool.ntp.org" --use pool.ntp.org  or time.nist.gov
-local udptimer=2
-local udptimeout=1000 --milliseconds
+local udptimer=4
+local udptimeout=500 --milliseconds
 local timezone=1
 --end settings
+
 
 function update(ntpserver)
   if not ntpserver then
@@ -15,20 +16,20 @@ function update(ntpserver)
   cu:dns(ntpserver,function(conn,ip)
     --if dns suceed
         print("from IP:",ip);
-
         --setup timeout 
-        tmr.alarm(udptimer,udptimeout,0,function()
-      cu:close()
-      cu=nil    
-      return("timeout")    
-    end) 
+      tmr.alarm(udptimer,udptimeout,0,function()
+              cu:close()
+              cu=nil    
+              return("timeout")    
+              end) 
     
     --open connection
       cu:connect(123,ip)
+     --cu:connect(123,"178.23.124.2")
         cu:send(request)
         cu:on("receive",function(cu,c) 
 
-            --something received, close connection and disose element
+            --something received, close connection and dispose element
             tmr.stop(udptimer)
             cu:close()
             cu=nil 
@@ -44,7 +45,10 @@ function update(ntpserver)
             local hour = ustamp % 86400 / 3600
             local minute = ustamp % 3600 / 60
             local second = ustamp % 60
-            print(string.format("UNIX-Timestamp: %u -> %02u:%02u:%02u",ustamp,hour,minute,second))
+            local str = string.format("%02u:%02u:%02u",hour,minute,second)
+            --print(string.format("UNIX-Timestamp: %u -> %02u:%02u:%02u",ustamp,hour,minute,second))
+            print (str)
+            return(str)
         end)
   end)
 end
